@@ -54,6 +54,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ],
       ),
       body: profile.when(
+        skipLoadingOnRefresh: false,
         data: (appUser) {
           return Center(
             child: Column(
@@ -90,7 +91,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   onPressed: () {
                     context.goNamed(RouterNames.geo);
                   },
-                  child: const Text('현재위치 조회'),
+                  child: const Text('현재위치 조회 및 근처 매장 조회'),
                 ),
               ],
             ),

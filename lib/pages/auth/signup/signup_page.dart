@@ -76,7 +76,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                 shrinkWrap: true,
                 reverse: true,
                 children: [
-                  const FlutterLogo(size: 150),
+                  const FlutterLogo(size: 100),
                   const SizedBox(height: 20),
                   NameFormField(nameController: _nameController),
                   const SizedBox(height: 20),

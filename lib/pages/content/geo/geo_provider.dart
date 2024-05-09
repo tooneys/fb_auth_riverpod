@@ -11,5 +11,5 @@ FutureOr<Locate> geo(GeoRef ref) {
 
 @riverpod
 FutureOr<List<Locate>> openLocate(OpenLocateRef ref) {
-  return ref.watch(locationProvider).getOpenLocate();
+  return ref.watch(locationProvider).getOpenLocations();
 }

@@ -69,7 +69,7 @@ class _SigninPageState extends ConsumerState<SigninPage> {
                 shrinkWrap: true,
                 reverse: true,
                 children: [
-                  const FlutterLogo(size: 150),
+                  const FlutterLogo(size: 100),
                   const SizedBox(height: 20),
                   EmailFormField(emailController: _emailController),
                   const SizedBox(height: 20),

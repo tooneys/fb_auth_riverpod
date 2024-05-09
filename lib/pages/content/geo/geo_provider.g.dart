@@ -20,7 +20,7 @@ final geoProvider = AutoDisposeFutureProvider<Locate>.internal(
 );
 
 typedef GeoRef = AutoDisposeFutureProviderRef<Locate>;
-String _$openLocateHash() => r'de3279defecc0b00a77e3a6eafb78bb3351e5cd3';
+String _$openLocateHash() => r'fcb79064b02e1311ffb80c83275a956b3cc9dca0';
 
 /// See also [openLocate].
 @ProviderFor(openLocate)

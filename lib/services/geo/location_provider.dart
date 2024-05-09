@@ -5,11 +5,11 @@ import 'location.dart';
 part 'location_provider.g.dart';
 
 @riverpod
-Location location(LocationRef ref) {
+LocationService location(LocationRef ref) {
   print('[locationProvider] initialized');
 
   ref.onDispose(() {
     print('[locationProvider] disposed');
   });
-  return Location();
+  return LocationService();
 }

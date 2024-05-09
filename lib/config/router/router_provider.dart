@@ -94,12 +94,12 @@ GoRouter router(RouterRef ref) {
             name: RouterNames.changePassword,
             builder: (context, state) => const ChangePasswordPage(),
           ),
+          GoRoute(
+            path: 'geo',
+            name: RouterNames.geo,
+            builder: (context, state) => const GeoLocationPage(),
+          ),
         ],
-      ),
-      GoRoute(
-        path: '/geo',
-        name: RouterNames.geo,
-        builder: (context, state) => const GeoLocationPage(),
       ),
     ],
     errorBuilder: (context, state) {

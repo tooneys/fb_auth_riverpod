@@ -14,95 +14,87 @@ class GeoLocationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<SearchLocate> tempLocate = [];
-
-    final initLocate = ref.watch(openLocateProvider);
+    final initLocations = ref.watch(openLocateProvider);
     final location = ref.watch(geoProvider);
 
-    void aroundLocate(Locate loc) {
-      initLocate.whenOrNull(
-        data: (initLocate) {
-          tempLocate = [
-            for (final locate in initLocate)
-              if (calcDistance(loc, locate) <= 10.0)
-                SearchLocate(
+    List<SearchLocate> tempLocations = [];
+
+    void getNearbyLocations(Locate currentLocation) {
+      initLocations.whenOrNull(
+        data: (initLocations) {
+          tempLocations = initLocations
+              .where((locate) => calcDistance(currentLocation, locate) <= 5.0)
+              .map(
+                (locate) => SearchLocate(
                   loc: locate,
-                  km: calcDistance(loc, locate),
-                )
-          ];
+                  km: calcDistance(currentLocation, locate),
+                ),
+              )
+              .toList();
         },
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('위치정보 조회'),
+        title: const Text('Location Information'),
         actions: [
           IconButton(
-            onPressed: () {
-              ref.invalidate(geoProvider);
-            },
+            onPressed: () => ref.invalidate(geoProvider),
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: location.when(
-        data: (location) {
-          aroundLocate(location);
-
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    '현재 위도 경도 표기',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
+        skipLoadingOnRefresh: false,
+        data: (currentLocation) {
+          getNearbyLocations(currentLocation);
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Current Location',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text('위치 : ${location.name}'),
-                  Text('latitude : ${location.lat}'),
-                  Text('longitude : ${location.lng}'),
-                  const Divider(),
-                  const Text(
-                    '10Km 이내의 위치정보 리스트',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                Text('Name: ${currentLocation.name}'),
+                Text('Latitude: ${currentLocation.lat}'),
+                Text('Longitude: ${currentLocation.lng}'),
+                const Divider(),
+                const Text(
+                  'Nearby Locations (within 5km)',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: tempLocate.length,
-                      itemBuilder: (context, index) {
-                        final locate = tempLocate[index];
-
-                        return ListTile(
-                          title: Text(locate.loc!.name),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: tempLocations.length,
+                    itemBuilder: (context, index) {
+                      final location = tempLocations[index];
+                      return Card(
+                        child: ListTile(
+                          title: Text(location.loc!.name),
                           subtitle: Text(
-                              'lat: ${locate.loc!.lat}, lng: ${locate.loc!.lng}, distance: ${locate.km}Km'),
-                        );
-                      },
-                    ),
+                            '거리: ${location.km.toStringAsFixed(2)} km',
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => context.goNamed(RouterNames.home),
-                      child: const Text('홈으로'),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
-        error: (error, _) => Center(child: Text('error: $error')),
+        error: (error, _) => Center(child: Text('Error: $error')),
         loading: () => const Center(child: CustomLoader()),
       ),
     );
